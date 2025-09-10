@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Mail, Lock, Eye, EyeOff, User } from "lucide-react";
 
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState("");
@@ -36,50 +37,73 @@ const Login = ({ onLogin }) => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-green-100 to-blue-100">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-sm">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-          Login
+      <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+        {/* Avatar */}
+        <div className="flex justify-center mb-6">
+          <div className="w-16 h-16 bg-[#48B3AF] rounded-full flex items-center justify-center">
+            <User className="w-8 h-8 text-white" />
+          </div>
+        </div>
+
+        {/* Title */}
+        <h2 className="text-2xl font-bold text-center text-gray-800">
+          Welcome Back
         </h2>
+        <p className="text-center text-gray-500 mb-6">
+          Sign in to continue
+        </p>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
-          <div>
+          <div className="space-y-1">
             <label className="block text-sm font-medium text-gray-700">
               Email
             </label>
-            <input
-              type="email"
-              className="w-full mt-1 px-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-blue-400"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              placeholder="Enter your email"
-            />
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+
+              <input
+                type="email"
+                className="w-full h-12 pl-10 pr-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-[#48B3AF] focus:border-[#48B3AF] text-sm"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="Enter your email"
+              />
+            </div>
           </div>
 
-          <div>
+          <div className="space-y-1">
+
             <label className="block text-sm font-medium text-gray-700">
               Password
             </label>
-            <input
-              type="password"
-              className="w-full mt-1 px-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-blue-400"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder="Enter your password"
-            />
-          </div>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-500 text-white font-semibold py-2 rounded-md hover:bg-blue-600 disabled:opacity-50"
-          >
-            {loading ? "Signing in..." : "Sign In"}
-          </button>
+              <input
+                type="password"
+                className="w-full h-12 pl-10 pr-10 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-[#48B3AF] focus:border-[#48B3AF] text-sm"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="Enter your password"
+              />
+            </div>
+          </div>
+         <button
+              type="submit"
+              disabled={loading}
+              className="w-full h-12 bg-[#48B3AF] hover:bg-teal-600 text-white font-semibold rounded-lg transition disabled:opacity-50"
+            >
+              {loading ? "Signing in..." : "Sign In"}
+            </button>
+      
+
         </form>
       </div>
+
     </div>
   );
 };

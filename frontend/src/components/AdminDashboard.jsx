@@ -1,51 +1,65 @@
-import React from "react";
-import Sidebar from "./sidebar";
+import EntriesTable from "./EntriesTable";
+import React, { useState } from "react";
+import Sidebar from "./Sidebar.jsx";
+import CreateUserModal from "./CreateUser.jsx";
+import UploadDocumentModal from "./UploadDocument.jsx";
+import AddTaskModal from "./AddTaskModel.jsx";
 
-const AdminDashboard = () => {
+const AdminDashboard = ({ user, onLogout }) => {
+  const [showCreateUser, setShowCreateUser] = useState(false);
+const [showUploadDocument, setShowUploadDocument] = useState(false);
+const [showAddTask, setShowAddTask] = useState(false);
   return (
-    <div className="flex font-sans bg-[#e9f9d8] min-h-screen">
-      {/* Sidebar */}
-      <Sidebar user="Admin" />
+    <div className="flex min-h-screen">
+      {/* Sidebar with callback */}
+      <Sidebar user="Admin" onCreateUser={() => setShowCreateUser(true)} 
+        onUploadDocument={() => setShowUploadDocument(true)} />
 
-      {/* Main Content */}
-      <main className="flex-1 p-4 max-w-full space-y-4">
-        <h2 className="text-[#3bb6b6] font-semibold text-lg">
-          Dashboard Overview
-        </h2>
+      {/* Main Dashboard Content */}
+      <div className="flex-1 bg-[#e9f9d8] p-4 max-w-full space-y-4">
 
-        {/* Stats Section */}
-        <section className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
-          <div className="bg-white rounded-md shadow-md p-4 flex-1 max-w-xs sm:max-w-none">
-            <p className="text-gray-700 text-xs">Total Tasks</p>
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-xl font-semibold">Welcome, {user.name}</h1>
+          <button
+            onClick={onLogout}
+            className="px-4 py-2 bg-[#3bb6b6] text-gray-700 rounded-md hover:bg-[#00d0ff]"
+          >
+            Logout
+          </button>
+        </div>
+
+        {/* Stat section */}
+        <section className="flex flex-col sm:flex-row gap-4">
+          <div className="p-4 flex-1 max-w-xs sm:max-w-none shadow-md space-y-3 mx-auto border border-[#A4CCD9] rounded-xl sm:p-4 bg-white">
+            <p className="text-base font-normal mb-1 text-gray-900">Total Tasks</p>
             <p className="text-[#3bb6b6] font-bold text-2xl mt-1">24</p>
           </div>
-          <div className="bg-white rounded-md shadow-md p-4 flex-1 max-w-xs sm:max-w-none">
-            <p className="text-gray-700 text-xs">Pending Tasks</p>
+          <div className="p-4 flex-1 max-w-xs sm:max-w-none shadow-md space-y-3 mx-auto border border-[#A4CCD9] rounded-xl sm:p-4 bg-white">
+            <p className="text-base font-normal mb-1 text-gray-900">Pending Tasks</p>
             <p className="text-[#3bb6b6] font-bold text-2xl mt-1">8</p>
           </div>
-          <div className="bg-white rounded-md shadow-md p-4 flex-1 max-w-xs sm:max-w-none">
-            <p className="text-gray-400 text-xs">Completed Tasks</p>
-            <p className="text-[#a3b6bb] font-bold text-2xl mt-1">16</p>
+          <div className="p-4 flex-1 max-w-xs sm:max-w-none shadow-md space-y-3 mx-auto border border-[#A4CCD9] rounded-xl sm:p-4 bg-white">
+            <p className="text-base font-normal mb-1 text-gray-900">Completed Tasks</p>
+            <p className="text-[#3bb6b6] font-bold text-2xl mt-1">16</p>
           </div>
         </section>
 
-        {/* Manage Tasks Section */}
-        <section className="bg-white rounded-md shadow-md p-4 space-y-3">
-          <div className="flex justify-between items-center">
-            <h3 className="text-gray-800 font-semibold text-sm">Manage Tasks</h3>
+         {/* Manage Tasks Section */}
+         <section className="shadow-md space-y-3 max-w-5xl mx-auto border border-[#A4CCD9] rounded-xl sm:p-6 bg-white">
+            <div className="flex justify-between items-center">
+            <h3 className="text-base font-normal mb-1 text-gray-900">Manage Tasks</h3>
             <button
-              type="button"
-              className="bg-[#3bb6b6] text-white text-xs font-semibold px-3 py-1 rounded"
-            >
-              Add New Task
-            </button>
+             onClick={() => setShowAddTask(true)} 
+            className="px-4 py-2 bg-[#3bb6b6] text-gray-700 rounded-md hover:bg-[#00d0ff]"
+          >
+            Add New Task
+          </button>
           </div>
-          {/* Table omitted for brevity, copy your existing table here */}
         </section>
 
         {/* Dependencies Section */}
-        <section className="bg-white rounded-md shadow-md p-4 space-y-3">
-          <h3 className="text-gray-800 font-semibold text-sm">
+        <section className="shadow-md space-y-3 max-w-5xl mx-auto border border-[#A4CCD9] rounded-xl sm:p-6 bg-white">
+          <h3 className="text-base font-normal mb-1 text-gray-900">
             Cross Department Dependencies
           </h3>
           {/* Dependency cards */}
@@ -66,8 +80,20 @@ const AdminDashboard = () => {
             </div>
           </div>
         </section>
+
+        {/*Table */}
+        <EntriesTable />
+
+      </div>
+
+      {showCreateUser && (
+        <CreateUserModal onClose={() => setShowCreateUser(false)} />
+      )}
+      {showUploadDocument && (
+        <UploadDocumentModal onClose={() => setShowUploadDocument(false)} />
+      )}
+       {showAddTask && <AddTaskModal onClose={() => setShowAddTask(false)} />}
     
-      </main>
     </div>
   );
 };
