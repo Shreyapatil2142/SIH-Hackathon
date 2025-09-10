@@ -1,15 +1,15 @@
 import React from "react";
 
-const Sidebar = ({ onCreateUser, onUploadDocument  }) => {
+const Sidebar = ({ onSummarization, onCreateUser, onUploadDocument }) => {
 
   return (
-    <aside className="bg-[#3bb6b6] text-white w-60 min-h-screen flex flex-col justify-between p-4">
+    <aside className="bg-[#3bb6b6] text-white w-60 sticky min-h-screen flex flex-col justify-between p-4">
       {/* Logo / Title */}
       <div className="mb-8">
         <h1 className="text-lg font-bold mb-6">Admin Dashboard</h1>
         <nav className="flex flex-col space-y-3 font-normal text-base rounded-md border border-transparent">
           <a
-              onClick={onUploadDocument}
+            onClick={onUploadDocument}
             className="px-3 py-2 rounded-md hover:bg-[#2a8f8f] hover:text-white transition-colors duration-200 border border-transparent hover:border-[#1f6d6d]"
           >
             Upload Doc
@@ -21,10 +21,10 @@ const Sidebar = ({ onCreateUser, onUploadDocument  }) => {
             Create User
           </a>
           <a
-            href="#"
+            onClick={onSummarization}
             className="px-3 py-2 rounded-md hover:bg-[#2a8f8f] hover:text-white transition-colors duration-200 border border-transparent hover:border-[#1f6d6d]"
           >
-            Team Members
+            Summarization
           </a>
           <a
             href="#"
