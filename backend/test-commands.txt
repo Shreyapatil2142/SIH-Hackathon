@@ -1,0 +1,265 @@
+# MetroDocs Backend API Test Commands
+# Copy and paste these commands to test all endpoints
+# Make sure the backend server is running on http://localhost:3000
+
+# ===========================================
+# 1. HEALTH CHECK
+# ===========================================
+curl http://localhost:3000/health
+
+# ===========================================
+# 2. AUTHENTICATION
+# ===========================================
+
+# Login as Admin
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@metro-docs.com","password":"admin123"}'
+
+# Login as Engineer
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"engineer@metro-docs.com","password":"password123"}'
+
+# Get Profile (replace YOUR_TOKEN with actual token from login)
+curl -X GET http://localhost:3000/auth/profile \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# Logout
+curl -X POST http://localhost:3000/auth/logout \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# ===========================================
+# 3. ADMIN USER MANAGEMENT (Admin Only)
+# ===========================================
+
+# List all users
+curl -X GET http://localhost:3000/admin/users \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# List users with pagination
+curl -X GET "http://localhost:3000/admin/users?page=1&limit=5" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# List users by role
+curl -X GET "http://localhost:3000/admin/users?role=ENGINEER" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# Create new user
+curl -X POST http://localhost:3000/admin/users \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{
+    "name": "Jane Engineer",
+    "email": "jane@metro-docs.com",
+    "password": "password123",
+    "role": "ENGINEER"
+  }'
+
+# Create Depot Manager
+curl -X POST http://localhost:3000/admin/users \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{
+    "name": "Mike Depot Manager",
+    "email": "mike@metro-docs.com",
+    "password": "password123",
+    "role": "DEPOT_MANAGER"
+  }'
+
+# Update user (replace USER_ID with actual user ID)
+curl -X PATCH http://localhost:3000/admin/users/USER_ID \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{
+    "name": "Updated Name",
+    "role": "SUB_DIV_OFFICER"
+  }'
+
+# Reset user password
+curl -X PATCH http://localhost:3000/admin/users/USER_ID/password \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{
+    "newPassword": "newpassword123"
+  }'
+
+# Deactivate user (soft delete)
+curl -X DELETE http://localhost:3000/admin/users/USER_ID \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# ===========================================
+# 4. DOCUMENT MANAGEMENT
+# ===========================================
+
+# List all documents
+curl -X GET http://localhost:3000/documents \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# List documents with search
+curl -X GET "http://localhost:3000/documents?search=test" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# List documents with pagination
+curl -X GET "http://localhost:3000/documents?page=1&limit=5" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# Get specific document (replace DOCUMENT_ID with actual ID)
+curl -X GET http://localhost:3000/documents/DOCUMENT_ID \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# Upload new document (Admin only)
+curl -X POST http://localhost:3000/documents \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{
+    "title": "Metro Maintenance Report",
+    "text": "This document contains detailed maintenance procedures for the metro system. All engineers should follow these guidelines for track inspection, electrical system checks, and safety protocols. Regular maintenance is required every week to ensure passenger safety and system reliability."
+  }'
+
+# Upload another document
+curl -X POST http://localhost:3000/documents \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{
+    "title": "Safety Guidelines",
+    "text": "Important safety guidelines for metro operations. All staff must be trained on emergency procedures, evacuation protocols, and equipment safety. Regular safety drills should be conducted monthly."
+  }'
+
+# Process document with AI (Admin only) - Will fail if AI services not running
+curl -X POST http://localhost:3000/documents/DOCUMENT_ID/process \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# ===========================================
+# 5. TASK MANAGEMENT
+# ===========================================
+
+# List all tasks
+curl -X GET http://localhost:3000/tasks \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# List tasks by role
+curl -X GET "http://localhost:3000/tasks?role=ENGINEER" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# List tasks by status
+curl -X GET "http://localhost:3000/tasks?status=PENDING" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# List tasks with pagination
+curl -X GET "http://localhost:3000/tasks?page=1&limit=5" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# Get task updates (replace TASK_ID with actual task ID)
+curl -X GET http://localhost:3000/tasks/TASK_ID/updates \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# Update task progress
+curl -X POST http://localhost:3000/tasks/TASK_ID/progress \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{
+    "notes": "Started working on this task. Will complete by end of week.",
+    "status": "IN_PROGRESS"
+  }'
+
+# Escalate task
+curl -X POST http://localhost:3000/tasks/TASK_ID/escalate \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{
+    "notes": "Task requires additional resources and management attention."
+  }'
+
+# ===========================================
+# 6. REPORTS (Admin Only)
+# ===========================================
+
+# Get system overview
+curl -X GET http://localhost:3000/reports/overview \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# Get task report
+curl -X GET http://localhost:3000/reports/tasks \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# Get task report with filters
+curl -X GET "http://localhost:3000/reports/tasks?start_date=2025-01-01&end_date=2025-12-31&role=ENGINEER" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# Get user activity report
+curl -X GET http://localhost:3000/reports/user-activity \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# Get user activity with filters
+curl -X GET "http://localhost:3000/reports/user-activity?user_id=1&start_date=2025-01-01" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# ===========================================
+# 7. ERROR TESTING
+# ===========================================
+
+# Test invalid endpoint
+curl http://localhost:3000/invalid-endpoint
+
+# Test without authentication
+curl -X GET http://localhost:3000/documents
+
+# Test with invalid token
+curl -X GET http://localhost:3000/documents \
+  -H "Authorization: Bearer invalid_token"
+
+# Test with wrong role (try admin endpoint with engineer token)
+curl -X GET http://localhost:3000/admin/users \
+  -H "Authorization: Bearer ENGINEER_TOKEN"
+
+# ===========================================
+# 8. COMPLETE WORKFLOW TEST
+# ===========================================
+
+# Step 1: Login as admin
+ADMIN_TOKEN=$(curl -s -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@metro-docs.com","password":"admin123"}' | \
+  grep -o '"token":"[^"]*"' | cut -d'"' -f4)
+
+echo "Admin Token: $ADMIN_TOKEN"
+
+# Step 2: Create a user
+curl -X POST http://localhost:3000/admin/users \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $ADMIN_TOKEN" \
+  -d '{
+    "name": "Test User",
+    "email": "test@metro-docs.com",
+    "password": "password123",
+    "role": "ENGINEER"
+  }'
+
+# Step 3: Upload a document
+curl -X POST http://localhost:3000/documents \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $ADMIN_TOKEN" \
+  -d '{
+    "title": "Test Workflow Document",
+    "text": "This is a test document for the complete workflow testing. It contains information about metro operations and maintenance procedures."
+  }'
+
+# Step 4: List documents
+curl -X GET http://localhost:3000/documents \
+  -H "Authorization: Bearer $ADMIN_TOKEN"
+
+# Step 5: List users
+curl -X GET http://localhost:3000/admin/users \
+  -H "Authorization: Bearer $ADMIN_TOKEN"
+
+# ===========================================
+# NOTES:
+# ===========================================
+# 1. Replace YOUR_TOKEN with actual JWT token from login response
+# 2. Replace USER_ID, DOCUMENT_ID, TASK_ID with actual IDs from responses
+# 3. Some endpoints require Admin role - use admin token
+# 4. AI processing will fail if microservices not running (expected)
+# 5. All timestamps are in UTC format
+# 6. Pagination starts from page 1
+# 7. All responses follow the format: {"success": true/false, "message": "...", "data": {...}}
