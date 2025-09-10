@@ -3,19 +3,22 @@ import React, { useState } from "react";
 const UploadDocumentModal = ({ onClose }) => {
   const [title, setTitle] = useState("");
   const [file, setFile] = useState(null);
-  const [description, setDescription] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
+    console.log("Token:", token);
+    if (!token) {
+      alert("No token found. Please log in again.");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("title", title);
-    formData.append("description", description);
     if (file) formData.append("file", file);
 
     try {
-      const res = await fetch("http://localhost:3000/admin/documents", {
+      const res = await fetch("http://localhost:3000/documents", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -45,12 +48,6 @@ const UploadDocumentModal = ({ onClose }) => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
-          />
-          <textarea
-            placeholder="Description"
-            className="w-full border rounded-md p-2"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
           />
           <input
             type="file"

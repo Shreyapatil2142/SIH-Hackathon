@@ -25,7 +25,16 @@ const Login = ({ onLogin }) => {
       if (!response.ok) {
         setError(data.message || "Login failed");
       } else {
-        localStorage.setItem("token", data.token);
+        const token = data?.data?.token;
+        const user = data?.data?.user;
+
+        if (token) {
+          localStorage.setItem("token", token); // <-- Store token
+          localStorage.setItem("user", JSON.stringify(user)); // <-- (Optional) Store user info
+          console.log("Token saved:", token);
+        } else {
+          console.error("No token found in response", data);
+        }
         if (onLogin) onLogin(data); // <-- this will trigger dashboard load
       }
     } catch (err) {
@@ -49,9 +58,7 @@ const Login = ({ onLogin }) => {
         <h2 className="text-2xl font-bold text-center text-gray-800">
           Welcome Back
         </h2>
-        <p className="text-center text-gray-500 mb-6">
-          Sign in to continue
-        </p>
+        <p className="text-center text-gray-500 mb-6">Sign in to continue</p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -75,7 +82,6 @@ const Login = ({ onLogin }) => {
           </div>
 
           <div className="space-y-1">
-
             <label className="block text-sm font-medium text-gray-700">
               Password
             </label>
@@ -92,18 +98,15 @@ const Login = ({ onLogin }) => {
               />
             </div>
           </div>
-         <button
-              type="submit"
-              disabled={loading}
-              className="w-full h-12 bg-[#48B3AF] hover:bg-teal-600 text-white font-semibold rounded-lg transition disabled:opacity-50"
-            >
-              {loading ? "Signing in..." : "Sign In"}
-            </button>
-      
-
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full h-12 bg-[#48B3AF] hover:bg-teal-600 text-white font-semibold rounded-lg transition disabled:opacity-50"
+          >
+            {loading ? "Signing in..." : "Sign In"}
+          </button>
         </form>
       </div>
-
     </div>
   );
 };

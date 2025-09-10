@@ -3,19 +3,33 @@ const aiService = require('../utils/aiService');
 
 const uploadDocument = async (req, res) => {
   try {
-    const { title, text, file_url } = req.body;
+    const { title, description } = req.body;
 
-    if (!title || !text) {
+    console.log("UploadDocument called");
+    console.log("req.body:", req.body);       // For text fields
+    console.log("req.file:", req.file);       // If using multer
+    console.log("req.files:", req.files);     // If multiple files
+
+    if (!title) {
       return res.status(400).json({
         success: false,
-        message: 'Title and text content are required'
+        message: 'Title is required'
       });
     }
 
-    // Create document record
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'File is required'
+      });
+    }
+
+    const fileUrl = `/uploads/${req.file.filename}`; // adjust path based on static serve
+
+    // Insert into DB
     const result = await db.query(
-      'INSERT INTO documents (title, file_url, text, created_by) VALUES (?, ?, ?, ?)',
-      [title, file_url || null, text, req.user.id]
+      "INSERT INTO documents (title, file_url, created_by) VALUES (?, ?, ?)",
+      [req.body.title, req.file.path, req.user.id]
     );
 
     const documentId = result.insertId;
@@ -26,11 +40,13 @@ const uploadDocument = async (req, res) => {
       data: {
         documentId,
         title,
-        file_url,
+        description: description || '',
+        file_url: fileUrl,
         created_by: req.user.id
       }
     });
   } catch (error) {
+    
     console.error('Upload document error:', error);
     res.status(500).json({
       success: false,
