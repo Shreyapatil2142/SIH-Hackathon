@@ -21,7 +21,7 @@ const SummarizationTask = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-20 flex justify-center items-start overflow-auto pt-10 px-4">
+    <div className="fixed inset-0 z-50 bg-gradient-to-r from-green-100 to-blue-100 flex justify-center items-start overflow-auto pt-10 px-4">
       <div className="w-full max-w-5xl bg-white rounded-xl shadow-md p-6 sm:p-8">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold text-gray-800">
